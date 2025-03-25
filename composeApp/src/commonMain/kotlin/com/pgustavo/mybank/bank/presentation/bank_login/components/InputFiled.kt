@@ -15,6 +15,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.pgustavo.mybank.core.presentation.Appsurface
 import com.pgustavo.mybank.core.presentation.formatCpf
 
 @Composable
@@ -61,7 +62,10 @@ fun PasswordInputField(
         trailingIcon = {
             val icon = if (passwordVisible) Visibility else VisibilityOff
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                Icon(imageVector = icon, contentDescription = "Toggle password visibility")
+                Icon(
+                    imageVector = icon, contentDescription = "Toggle password visibility",
+                    tint = Appsurface
+                )
             }
         }
     )

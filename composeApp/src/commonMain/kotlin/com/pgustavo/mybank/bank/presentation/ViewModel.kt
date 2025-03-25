@@ -21,7 +21,7 @@ class ViewModel(private val repository: BankRepository) : ViewModel() {
     val bankStatement: StateFlow<Result<List<Moviment>, DataError.Remote>> = _bankStatement
 
     private val _accountHolder = MutableStateFlow<Result<AccountHolder, DataError.Remote>>(
-        Result.Success(AccountHolder(0, "", "", "", null))
+        Result.Success(AccountHolder(0, "", "", "", "", 0.0))
     )
     val accountHolder: StateFlow<Result<AccountHolder, DataError.Remote>> = _accountHolder
 

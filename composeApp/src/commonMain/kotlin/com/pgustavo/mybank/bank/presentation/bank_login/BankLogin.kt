@@ -1,7 +1,6 @@
 package com.pgustavo.mybank.bank.presentation.bank_login
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,10 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pgustavo.mybank.bank.presentation.bank_login.components.BankLoginEvent
 import com.pgustavo.mybank.bank.presentation.bank_login.components.CPFInputField
+import com.pgustavo.mybank.bank.presentation.bank_login.components.MyBottomSheet
 import com.pgustavo.mybank.bank.presentation.bank_login.components.PasswordInputField
 import com.pgustavo.mybank.core.domain.Result
 import com.pgustavo.mybank.core.presentation.AppWhite
@@ -44,20 +43,18 @@ fun BankLoginScreen(onClick: (String, String) -> Unit) {
     val viewModel = koinViewModel<BankLoginViewModel>()
     val accountHolderState by viewModel.accountHolder.collectAsState()
     var loginAttempted by remember { mutableStateOf(false) }
+    var showSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(accountHolderState) {
         if (loginAttempted) {
             when (val result = accountHolderState) {
                 is Result.Success -> {
                     cpf = cleanCpf(cpf)
-                    println(cpf)
                     if (password == result.data.password &&
                         cpf == result.data.cpf
                     ) {
-                        println("test cpf and password")
-                        onClick(result.data.id.toString(), result.data.name)
+                        onClick(result.data.balance.toString(), result.data.name)
                     } else {
-                        println("ivalid cpf or password")
                         error = "Invalid password or cpf"
                     }
                 }
@@ -127,14 +124,18 @@ fun BankLoginScreen(onClick: (String, String) -> Unit) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 if (error.isNotEmpty()) {
-                    Text(error, color = Color.Red)
-                    Text("Try again", modifier = Modifier.clickable {
-                        error = ""
-                        loginAttempted = false
-                        cpf = ""
-                        password = ""
-                        viewModel.clearAccountHolderData(BankLoginEvent.InvalidPassword)
-                    })
+                    showSheet = true
+                    MyBottomSheet(
+                        showSheet = showSheet,
+                        onDismiss = {
+                            viewModel.clearAccountHolderData(BankLoginEvent.InvalidPassword)
+                            error = ""
+                            loginAttempted = false
+                            cpf = ""
+                            password = ""
+                            showSheet = false
+                        }
+                    )
                 }
             }
         }

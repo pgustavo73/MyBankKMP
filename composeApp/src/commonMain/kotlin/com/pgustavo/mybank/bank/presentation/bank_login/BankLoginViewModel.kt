@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 class BankLoginViewModel(private val repository: BankRepository) : ViewModel() {
 
     private val initialAccountHolder =
-        Result.Success(AccountHolder(0, "", "", "", null))
+        Result.Success(AccountHolder(0, "", "", "", "", 0.0))
 
     private val _accountHolder = MutableStateFlow<Result<AccountHolder, DataError.Remote>>(
         initialAccountHolder

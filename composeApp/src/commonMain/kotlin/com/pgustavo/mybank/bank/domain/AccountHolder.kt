@@ -8,5 +8,6 @@ data class AccountHolder(
     val name: String,
     val cpf: String,
     val password: String,
-    val account: Account? = null
+    val number: String,
+    val balance: Double?
 )

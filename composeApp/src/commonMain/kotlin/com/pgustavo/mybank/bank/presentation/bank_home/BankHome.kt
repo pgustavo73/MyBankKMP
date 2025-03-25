@@ -6,11 +6,11 @@ import androidx.compose.runtime.Composable
 
 
 @Composable
-fun BankHomeScreen(id: String, name: String) {
+fun BankHomeScreen(balance: String?, name: String) {
     Column {
         Text("Home Screen")
 
-        Text("ID: $id")
-        Text("Name: $name")
+        Text("Hello $name !")
+        Text("Your balence is: $balance")
     }
 }
