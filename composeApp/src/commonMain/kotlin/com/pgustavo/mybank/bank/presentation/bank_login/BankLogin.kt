@@ -32,6 +32,7 @@ import com.pgustavo.mybank.core.domain.Result
 import com.pgustavo.mybank.core.presentation.AppWhite
 import com.pgustavo.mybank.core.presentation.Appsurface
 import com.pgustavo.mybank.core.presentation.cleanCpf
+import com.pgustavo.mybank.core.presentation.formatCurrency
 import org.koin.compose.viewmodel.koinViewModel
 
 
@@ -53,7 +54,8 @@ fun BankLoginScreen(onClick: (String, String) -> Unit) {
                     if (password == result.data.password &&
                         cpf == result.data.cpf
                     ) {
-                        onClick(result.data.balance.toString(), result.data.name)
+                        val balance = formatCurrency(result.data.balance ?: 0.0)
+                        onClick(balance, result.data.name)
                     } else {
                         error = "Invalid password or cpf"
                     }
