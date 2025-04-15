@@ -1,4 +1,4 @@
-package com.pgustavo.mybank.bank.presentation.bank_login.components
+package com.pgustavo.mybank.bank.presentation.bank_login
 
 sealed class BankLoginEvent {
     data class Login(val password: String) : BankLoginEvent()

@@ -1,4 +1,4 @@
-package com.pgustavo.mybank.bank.presentation.bank_home.components
+package com.pgustavo.mybank.bank.presentation.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +42,6 @@ fun CreditCard(
             containerColor = Color.Transparent
         )
     ) {
-        // Gradient background
         Box(
             modifier = Modifier
                 .fillMaxSize()

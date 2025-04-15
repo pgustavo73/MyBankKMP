@@ -1,9 +1,8 @@
-package com.pgustavo.mybank.bank.presentation
+package com.pgustavo.mybank.bank.presentation.bank_home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pgustavo.mybank.bank.data.repository.BankRepository
-import com.pgustavo.mybank.bank.domain.AccountHolder
 import com.pgustavo.mybank.bank.domain.Moviment
 import com.pgustavo.mybank.core.domain.DataError
 import com.pgustavo.mybank.core.domain.Result
@@ -13,17 +12,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ViewModel(private val repository: BankRepository) : ViewModel() {
+class BankHomeViewModel(private val repository: BankRepository) : ViewModel() {
 
     private val _bankStatement = MutableStateFlow<Result<List<Moviment>, DataError.Remote>>(
         Result.Success(emptyList())
     )
     val bankStatement: StateFlow<Result<List<Moviment>, DataError.Remote>> = _bankStatement
 
-    private val _accountHolder = MutableStateFlow<Result<AccountHolder, DataError.Remote>>(
-        Result.Success(AccountHolder(0, "", "", "", "", 0.0))
-    )
-    val accountHolder: StateFlow<Result<AccountHolder, DataError.Remote>> = _accountHolder
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -31,12 +26,16 @@ class ViewModel(private val repository: BankRepository) : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
-    init {
-        getAccountHolder("102560")
-        findBankStatement(1)
+    private var hasInitialized = false
+
+    fun initWith(accountId: Int) {
+        if (hasInitialized) return
+        hasInitialized = true
+        loadBankStatement(accountId)
     }
 
-    private fun findBankStatement(accountId: Int) {
+
+    private fun loadBankStatement(accountId: Int) {
         viewModelScope.launch {
             repository.findBankStatement(accountId)
                 .onSuccess {
@@ -44,18 +43,7 @@ class ViewModel(private val repository: BankRepository) : ViewModel() {
                 }
                 .onError {
                     _bankStatement.value = Result.Error(it)
-                }
-        }
-    }
-
-    private fun getAccountHolder(passWord: String) {
-        viewModelScope.launch {
-            repository.getAccountHolder(passWord)
-                .onSuccess {
-                    _accountHolder.value = Result.Success(it)
-                }
-                .onError {
-                    _accountHolder.value = Result.Error(it)
+                    _error.value = "Could not load statement"
                 }
         }
     }

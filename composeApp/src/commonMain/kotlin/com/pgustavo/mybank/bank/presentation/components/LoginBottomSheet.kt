@@ -1,4 +1,4 @@
-package com.pgustavo.mybank.bank.presentation.bank_login.components
+package com.pgustavo.mybank.bank.presentation.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column

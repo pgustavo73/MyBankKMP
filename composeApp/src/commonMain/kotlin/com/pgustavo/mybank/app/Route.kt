@@ -8,7 +8,7 @@ sealed interface Route {
     data object BankGraph : Route
 
     @Serializable
-    data class BankHome(val balance: String?, val  name: String) : Route
+    data class BankHome(val balance: String?, val  name: String, val id: Long) : Route
 
     @Serializable
     data object BankLogin : Route

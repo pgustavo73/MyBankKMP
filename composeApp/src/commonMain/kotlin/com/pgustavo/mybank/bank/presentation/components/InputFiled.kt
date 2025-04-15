@@ -1,4 +1,4 @@
-package com.pgustavo.mybank.bank.presentation.bank_login.components
+package com.pgustavo.mybank.bank.presentation.components
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,7 +15,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.pgustavo.mybank.core.presentation.Appsurface
+import com.pgustavo.mybank.bank.presentation.components.Icons.Visibility
+import com.pgustavo.mybank.bank.presentation.components.Icons.VisibilityOff
+import com.pgustavo.mybank.core.presentation.AppSurface
 import com.pgustavo.mybank.core.presentation.formatCpf
 
 @Composable
@@ -64,7 +66,7 @@ fun PasswordInputField(
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(
                     imageVector = icon, contentDescription = "Toggle password visibility",
-                    tint = Appsurface
+                    tint = AppSurface
                 )
             }
         }

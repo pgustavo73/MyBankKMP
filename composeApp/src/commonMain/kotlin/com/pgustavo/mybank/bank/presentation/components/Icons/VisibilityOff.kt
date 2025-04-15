@@ -1,4 +1,4 @@
-package com.pgustavo.mybank.bank.presentation.bank_login.components
+package com.pgustavo.mybank.bank.presentation.components.Icons
 
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath

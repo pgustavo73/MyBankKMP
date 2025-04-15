@@ -29,8 +29,8 @@ fun App() {
                     exitTransition = { slideOutHorizontally() },
                     popEnterTransition = { slideInHorizontally() }
                 ) {
-                    BankLoginScreen { balance, name ->
-                        navController.navigate(Route.BankHome(balance, name))
+                    BankLoginScreen { balance, name , id->
+                        navController.navigate(Route.BankHome(balance, name, id))
                     }
                 }
                 composable<Route.BankHome>(
@@ -40,7 +40,7 @@ fun App() {
                     popExitTransition = { slideOutHorizontally() }
                 ) {
                     val bankHome = it.toRoute<Route.BankHome>()
-                    BankHomeScreen(bankHome.balance, bankHome.name)
+                    BankHomeScreen(bankHome.balance, bankHome.name, bankHome.id)
                 }
             }
         }

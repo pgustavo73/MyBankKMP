@@ -1,6 +1,7 @@
 package com.pgustavo.mybank.core.presentation
 
-
+import com.pgustavo.mybank.bank.domain.Moviment
+import com.pgustavo.mybank.bank.domain.MovimentType
 
 
 fun formatCpf(input: String): String {
@@ -30,4 +31,20 @@ fun formatCurrency(amount: Double): String {
 fun cleanCpf(input: String): String {
     val clearCpf = input.replace(".", "").replace("-", "")
     return clearCpf
+}
+
+
+
+fun sumIncome(moviments: List<Moviment>): String {
+    val inTotal = moviments
+        .filter { it.movimentType == MovimentType.INCOME }
+        .sumOf { it.value }
+    return formatCurrency(inTotal)
+}
+
+fun sumExpense(moviments: List<Moviment>): String {
+    val exTotal = moviments
+        .filter { it.movimentType == MovimentType.EXPENSE }
+        .sumOf { it.value }
+    return formatCurrency(exTotal)
 }

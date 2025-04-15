@@ -89,6 +89,7 @@ android {
 
 dependencies {
     implementation(libs.identity.jvm)
+    implementation(libs.androidx.material3.android)
     debugImplementation(compose.uiTooling)
 }
 

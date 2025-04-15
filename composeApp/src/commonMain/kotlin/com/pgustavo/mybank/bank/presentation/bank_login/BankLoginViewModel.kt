@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pgustavo.mybank.bank.data.repository.BankRepository
 import com.pgustavo.mybank.bank.domain.AccountHolder
-import com.pgustavo.mybank.bank.presentation.bank_login.components.BankLoginEvent
 import com.pgustavo.mybank.core.domain.DataError
 import com.pgustavo.mybank.core.domain.Result
 import com.pgustavo.mybank.core.domain.onError

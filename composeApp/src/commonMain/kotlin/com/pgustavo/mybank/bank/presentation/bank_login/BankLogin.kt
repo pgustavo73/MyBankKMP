@@ -24,20 +24,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.pgustavo.mybank.bank.presentation.bank_login.components.BankLoginEvent
-import com.pgustavo.mybank.bank.presentation.bank_login.components.CPFInputField
-import com.pgustavo.mybank.bank.presentation.bank_login.components.MyBottomSheet
-import com.pgustavo.mybank.bank.presentation.bank_login.components.PasswordInputField
+import com.pgustavo.mybank.bank.presentation.components.CPFInputField
+import com.pgustavo.mybank.bank.presentation.components.MyBottomSheet
+import com.pgustavo.mybank.bank.presentation.components.PasswordInputField
 import com.pgustavo.mybank.core.domain.Result
 import com.pgustavo.mybank.core.presentation.AppWhite
-import com.pgustavo.mybank.core.presentation.Appsurface
+import com.pgustavo.mybank.core.presentation.AppSurface
 import com.pgustavo.mybank.core.presentation.cleanCpf
 import com.pgustavo.mybank.core.presentation.formatCurrency
 import org.koin.compose.viewmodel.koinViewModel
 
 
 @Composable
-fun BankLoginScreen(onClick: (String, String) -> Unit) {
+fun BankLoginScreen(onClick: (String, String, Long) -> Unit) {
     var cpf by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var error by remember { mutableStateOf("") }
@@ -55,7 +54,7 @@ fun BankLoginScreen(onClick: (String, String) -> Unit) {
                         cpf == result.data.cpf
                     ) {
                         val balance = formatCurrency(result.data.balance ?: 0.0)
-                        onClick(balance, result.data.name)
+                        onClick(balance, result.data.name, result.data.id)
                     } else {
                         error = "Invalid password or cpf"
                     }
@@ -77,8 +76,9 @@ fun BankLoginScreen(onClick: (String, String) -> Unit) {
     ) {
         Surface(
             modifier = Modifier
-                .fillMaxWidth(),
-            color = Appsurface,
+                .fillMaxWidth()
+                .background(AppWhite),
+            color = AppSurface,
             shape = RoundedCornerShape(
                 bottomEnd = 100.dp
             )
@@ -94,7 +94,7 @@ fun BankLoginScreen(onClick: (String, String) -> Unit) {
             modifier = Modifier
                 .weight(1.8f)
                 .fillMaxWidth()
-                .background(Appsurface),
+                .background(AppSurface),
             color = AppWhite,
             shape = RoundedCornerShape(
                 topStart = 100.dp
