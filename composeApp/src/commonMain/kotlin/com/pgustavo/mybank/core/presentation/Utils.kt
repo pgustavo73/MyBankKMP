@@ -1,7 +1,11 @@
 package com.pgustavo.mybank.core.presentation
 
+
 import com.pgustavo.mybank.bank.domain.Moviment
 import com.pgustavo.mybank.bank.domain.MovimentType
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 
 fun formatCpf(input: String): String {
@@ -47,4 +51,20 @@ fun sumExpense(moviments: List<Moviment>): String {
         .filter { it.movimentType == MovimentType.EXPENSE }
         .sumOf { it.value }
     return formatCurrency(exTotal)
+}
+
+fun formatDate(isoString: String): String {
+    val fixedIso = sanitizeIsoString(isoString)
+    val instant = Instant.parse(fixedIso)
+    val dateTime = instant.toLocalDateTime(TimeZone.UTC)
+
+    val monthName = dateTime.month.name.lowercase().replaceFirstChar { it.uppercase() }
+    return "$monthName ${dateTime.dayOfMonth},${dateTime.year}"
+}
+
+fun sanitizeIsoString(input: String): String {
+    val withMilliseconds = input
+        .replace(Regex("""\.(\d{3})\d*"""), ".$1")
+        .let { if (!it.endsWith("Z")) it + "Z" else it }
+    return withMilliseconds
 }

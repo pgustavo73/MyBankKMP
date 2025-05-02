@@ -1,6 +1,10 @@
 package com.pgustavo.mybank.bank.presentation.bank_home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +18,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -41,11 +47,13 @@ import com.pgustavo.mybank.bank.presentation.components.Balance
 import com.pgustavo.mybank.bank.presentation.components.BottomScreen
 import com.pgustavo.mybank.bank.presentation.components.ButtonsBlock
 import com.pgustavo.mybank.bank.presentation.components.CreditCard
+import com.pgustavo.mybank.bank.presentation.components.StatementCard
 import com.pgustavo.mybank.bank.presentation.components.TopHeader
 import com.pgustavo.mybank.core.domain.Result
 import com.pgustavo.mybank.core.presentation.AppBase
 import com.pgustavo.mybank.core.presentation.AppSurface
 import com.pgustavo.mybank.core.presentation.AppWhite
+import kotlinx.coroutines.delay
 import mybank.composeapp.generated.resources.Res
 import mybank.composeapp.generated.resources.dollar
 import org.jetbrains.compose.resources.painterResource
@@ -55,6 +63,7 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun BankHomeScreen(balance: String?, name: String, id: Long) {
     var displayStatement by remember { mutableStateOf(false) }
+    var actualDisplayStatement by remember { mutableStateOf(false) }
     val viewModel = koinViewModel<BankHomeViewModel>()
     val bankStatementState by viewModel.bankStatement.collectAsState()
     var movements by remember { mutableStateOf<List<Moviment>>(emptyList()) }
@@ -136,9 +145,9 @@ fun BankHomeScreen(balance: String?, name: String, id: Long) {
                             contentDescription = null,
                         )
                         Text("Statement", fontWeight = FontWeight.Bold, color = AppSurface)
-                        var expanded by remember { mutableStateOf(false) }
+                        var routate by remember { mutableStateOf(false) }
                         val rotationAngle by animateFloatAsState(
-                            targetValue = if (expanded) 180f else 0f,
+                            targetValue = if (routate) 180f else 0f,
                             label = "rotation"
                         )
                         FloatingActionButton(
@@ -147,7 +156,7 @@ fun BankHomeScreen(balance: String?, name: String, id: Long) {
                             containerColor = AppSurface,
                             onClick = {
                                 displayStatement = !displayStatement
-                                expanded = !expanded
+                                routate = !routate
                             },
                             elevation = FloatingActionButtonDefaults.elevation(0.dp),
                             shape = CircleShape
@@ -163,6 +172,16 @@ fun BankHomeScreen(balance: String?, name: String, id: Long) {
                 }
             }
         }
+
+        LaunchedEffect(displayStatement) {
+            if (displayStatement) {
+                actualDisplayStatement = true
+            } else {
+                delay(1000)
+                actualDisplayStatement = false
+            }
+        }
+
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -177,17 +196,45 @@ fun BankHomeScreen(balance: String?, name: String, id: Long) {
                     .padding(18.dp),
             ) {
                 Row {
-                    if (displayStatement) {
-                        Text(
-                            "Detail of movements",
-                            fontWeight = FontWeight.Bold,
-                            color = AppSurface
-                        )
+                    AnimatedVisibility(
+                        visible = displayStatement,
+                        exit = fadeOut(animationSpec = tween(800)),
+                        enter = fadeIn(animationSpec = tween(800))
+                    ) {
+                        Column(
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                "Detail of movements",
+                                fontWeight = FontWeight.Bold,
+                                color = AppSurface
+                            )
+                            Spacer(modifier = Modifier.height(3.dp))
+                            LazyColumn {
+                                items(
+                                    items = movements,
+                                    key = { moviment -> moviment.id }
+                                ) { moviment ->
+                                    StatementCard(moviment)
+                                }
+                            }
+                        }
                     }
                 }
-                ButtonsBlock()
-                Spacer(modifier = Modifier.height(6.dp))
-                BottomScreen(movements)
+                AnimatedVisibility(
+                    visible = !displayStatement,
+                    exit = fadeOut(animationSpec = tween(1000)),
+                    enter = fadeIn(animationSpec = tween(1000))
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                            .padding(start = 18.dp),
+                    ) {
+                        ButtonsBlock()
+                        Spacer(modifier = Modifier.height(6.dp))
+                        BottomScreen(movements)
+                    }
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 
 
-private const val BASE_URL = "http://192.168.0.14:8080"
+private const val BASE_URL = "http://192.168.0.10:8080"
 
 class KtorRemoteDataSource(private val  httpClient: HttpClient) : RemoteDataSource {
 

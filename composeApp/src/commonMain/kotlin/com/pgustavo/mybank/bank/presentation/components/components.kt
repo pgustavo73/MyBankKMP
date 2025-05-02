@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -22,9 +23,9 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -41,20 +42,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import banknote
 import barcode_scanner
-import com.pgustavo.mybank.app.App
 import com.pgustavo.mybank.bank.domain.Moviment
+import com.pgustavo.mybank.bank.domain.MovimentType
 import com.pgustavo.mybank.bank.presentation.components.Icons.Visibility
 import com.pgustavo.mybank.bank.presentation.components.Icons.VisibilityOff
 import com.pgustavo.mybank.core.presentation.AppBase
 import com.pgustavo.mybank.core.presentation.AppBlack
+import com.pgustavo.mybank.core.presentation.AppCardStatement
+import com.pgustavo.mybank.core.presentation.AppGreen
+import com.pgustavo.mybank.core.presentation.AppRed
 import com.pgustavo.mybank.core.presentation.AppSurface
 import com.pgustavo.mybank.core.presentation.AppWhite
 import com.pgustavo.mybank.core.presentation.DarkSurface
+import com.pgustavo.mybank.core.presentation.formatCurrency
+import com.pgustavo.mybank.core.presentation.formatDate
 import com.pgustavo.mybank.core.presentation.sumExpense
 import com.pgustavo.mybank.core.presentation.sumIncome
 import gamepad
+import minus_circled
 import mobile
 import others
+import plus_circled
 import transfer
 
 @Composable
@@ -164,7 +172,7 @@ fun ButtonsBlock() {
         Column {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.Center,
             ) {
                 SquareButton("Shop", onClick = {}, Icons.Filled.ShoppingCart)
                 SquareButton("Withdraw", onClick = {}, banknote)
@@ -201,7 +209,7 @@ fun BottomScreen(moviments: List<Moviment>) {
             modifier = Modifier.fillMaxWidth()
                 .padding(6.dp),
             horizontalArrangement = Arrangement.Center
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .width(125.dp)
@@ -224,6 +232,89 @@ fun BottomScreen(moviments: List<Moviment>) {
                 Text(sumExpense(moviments), color = Color.Red)
             }
 
+        }
+    }
+}
+
+@Composable
+fun StatementCard(moviment: Moviment) {
+    Card(
+        modifier = Modifier
+            .width(350.dp)
+            .height(100.dp)
+            .padding(6.dp),
+        shape = RoundedCornerShape(8.dp),
+        elevation = CardDefaults.cardElevation(6.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = AppCardStatement
+        )
+    ) {
+        Row(
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(50.dp)
+                    .padding(6.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    imageVector = if (moviment.movimentType == MovimentType.INCOME) {
+                        plus_circled
+                    } else {
+                        minus_circled
+                    },
+                    contentDescription = null,
+                    tint = if (moviment.movimentType == MovimentType.INCOME) {
+                        Color.Green
+                    } else {
+                        AppRed
+                    },
+                    modifier = Modifier.size(30.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(6.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.Start,
+            ) {
+                Row {
+                    Text(
+                        formatDate(moviment.dateTime ?: ""),
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+                Row {
+                    Text(
+                        moviment.description,
+                        color = AppBlack,
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    formatCurrency(moviment.value),
+                    color = if (moviment.movimentType == MovimentType.INCOME) {
+                        Color.Green
+                    } else {
+                        AppRed
+                    }
+                )
+            }
         }
     }
 }

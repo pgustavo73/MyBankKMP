@@ -48,6 +48,7 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
             implementation(libs.kotlinx.uuid.core)
+            implementation(libs.kotlix.datetime)
             api(libs.koin.core)
 
             implementation(libs.bundles.ktor)
