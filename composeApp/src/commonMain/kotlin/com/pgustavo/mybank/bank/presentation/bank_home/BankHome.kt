@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -85,7 +86,12 @@ fun BankHomeScreen(balance: String?, name: String, id: Long) {
             }
         }
     }
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(AppSurface)
+            .statusBarsPadding()
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
@@ -216,6 +222,9 @@ fun BankHomeScreen(balance: String?, name: String, id: Long) {
                                     key = { moviment -> moviment.id }
                                 ) { moviment ->
                                     StatementCard(moviment)
+                                }
+                                item {
+                                    Spacer(modifier = Modifier.height(10.dp))
                                 }
                             }
                         }

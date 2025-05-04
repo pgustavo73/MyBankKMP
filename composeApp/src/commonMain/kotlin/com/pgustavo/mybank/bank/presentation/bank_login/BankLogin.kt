@@ -70,6 +70,7 @@ fun BankLoginScreen(onClick: (String, String, Long) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(AppSurface)
             .statusBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
